@@ -3,9 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
+	"github.com/shamhub/threadapp/device"
 	"github.com/shamhub/threadapp/sender"
 
 	"github.com/shamhub/threadapp/config"
@@ -25,43 +27,68 @@ func main() {
 	objectCh := make(chan *data.Object) // Signalling data
 	closeCh := make(chan bool)          // manager signalling employee to stop sending objects
 
+	sender, fileErr := sender.NewSender()
+	if fileErr != nil {
+		fmt.Fprintf(os.Stderr, "Unable to open file: ", fileErr.Error())
+		os.Exit(1)
+	}
 	sender.LaunchSender(objectCh, closeCh)
 
 	// Output sequence
-	outputBuffer := receiver.NewReceiverSequence(windowSize)
-	var err error
+	receiver, fileErr := receiver.NewReceiver(windowSize)
+	if fileErr != nil {
+		fmt.Fprintf(os.Stderr, "Unable to open file:  ", fileErr.Error())
+		os.Exit(1)
+	}
 
-	debugCount := uint64(0) // for debugging
+	outputFile, fileErr := device.NewDataFileDevice(config.GetOutputFileName())
+	if fileErr != nil {
+		fmt.Fprintf(os.Stderr, "Unable to open file:  ", fileErr.Error())
+		os.Exit(1)
+	}
+
+	defer func() {
+		if file, ok := sender.Log.Writer().(*os.File); ok {
+			file.Sync()
+			file.Close()
+		} else if handler, ok := sender.Log.Writer().(io.Closer); ok {
+			handler.Close()
+		}
+
+		if file, ok := receiver.Log.Writer().(*os.File); ok {
+			file.Sync()
+			file.Close()
+		} else if handler, ok := receiver.Log.Writer().(io.Closer); ok {
+			handler.Close()
+		}
+
+		if file, ok := outputFile.(*device.DataFileDevice); ok {
+			file.Sync()
+			file.Close()
+		}
+		fmt.Printf("*****Main exit\n")
+	}()
 
 	// Process each object
+	debugCount := uint64(0) // for debugging
 	for {
-		object := <-objectCh                    // receive object
+		object := <-objectCh // receive object
+		receiver.Log.Printf("Received object: %v", object)
 		seqNumber := object.GetSequenceNumber() // read seq num of an object
 		debugCount++
-		err = outputBuffer.Print(seqNumber, config.GetBatchSize()) // print sequence
-		if err != nil {
-			waitForLastObject(objectCh, closeCh, err, debugCount)
+		fileErr, continu := receiver.Print(seqNumber, config.GetBatchSize(), outputFile) // print sequence
+		if fileErr != nil || continu == false {
+			receiver.WaitForLastObject(objectCh, closeCh, fileErr, debugCount)
 			break
 		}
-		if isOkToContinue(debugCount) {
-			closeCh <- false
-		} else {
-			closeCh <- true
-			break
-		}
+		// if isOkToContinue(debugCount) {
+		// 	closeCh <- false
+		// } else {
+		// 	closeCh <- true
+		// 	break
+		// }
+		closeCh <- false
 	}
-	fmt.Printf("*****Main exit\n")
-}
-
-func waitForLastObject(objectCh chan *data.Object, closeCh chan bool, err error, debugCount uint64) {
-	select {
-	case <-objectCh:
-		fmt.Printf("****main() - Received one last object(if any)\n")
-	default:
-		fmt.Printf("****main() - Received all %d objects from sender, without loss\n", debugCount)
-	}
-	closeCh <- true
-	fmt.Fprintf(os.Stderr, "%v\n", err.Error())
 }
 
 func isOkToContinue(debugCount uint64) bool {

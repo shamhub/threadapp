@@ -1,12 +1,29 @@
 package sender
 
 import (
-	"fmt"
+	"log"
+
+	"github.com/shamhub/threadapp/config"
 
 	"github.com/shamhub/threadapp/data"
+	"github.com/shamhub/threadapp/device"
 )
 
-func LaunchSender(objCh chan *data.Object, closeCh chan bool) {
+type Sender struct {
+	Log *log.Logger
+}
+
+func NewSender() (*Sender, error) {
+	loggingDevice, fileErr := device.NewLogFileDevice(config.GetSenderLogFileName())
+	if fileErr != nil {
+		return nil, fileErr
+	}
+
+	l := log.New(loggingDevice, "sender: ", log.LstdFlags)
+	return &Sender{l}, nil
+}
+
+func (sender *Sender) LaunchSender(objCh chan *data.Object, closeCh chan bool) {
 
 	// for random sequence numbers
 	sendersRandomSequence := data.NewRandomSequence()
@@ -17,10 +34,12 @@ func LaunchSender(objCh chan *data.Object, closeCh chan bool) {
 
 	go func() { // Launch a sender on go-routine
 		for {
-			objCh <- data.CreateObject(id, dataByte, sendersRandomSequence)
+			object := data.CreateObject(id, dataByte, sendersRandomSequence)
+			objCh <- object
+			sender.Log.Println("Sent object: ", object)
 			stop := <-closeCh
 			if stop == true {
-				fmt.Println("Received close signal")
+				sender.Log.Println("Received close signal")
 				break
 			}
 		}

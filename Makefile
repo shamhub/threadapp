@@ -1,9 +1,10 @@
 .PHONY: install
 
 install:
-	go install github.com/shamhub/threadapp/config
-	go install github.com/shamhub/threadapp/data/shuffle
-	go install github.com/shamhub/threadapp/data
-	go install github.com/shamhub/threadapp/sender
-	go install github.com/shamhub/threadapp/receiver
-	go install github.com/shamhub/threadapp
+	go install -race github.com/shamhub/threadapp/device
+	go install -race github.com/shamhub/threadapp/config
+	go install -race github.com/shamhub/threadapp/data/shuffle
+	go install -race github.com/shamhub/threadapp/data
+	go install -race github.com/shamhub/threadapp/sender
+	go install -race github.com/shamhub/threadapp/receiver
+	go install -race github.com/shamhub/threadapp

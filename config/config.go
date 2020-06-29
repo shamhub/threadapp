@@ -3,10 +3,20 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/nicholasjackson/env"
 )
+
+var outputFileMutex sync.RWMutex
+var outputFile string
+
+var receiverFileMutex sync.RWMutex
+var receiverLogFile string
+
+var senderFileMutex sync.RWMutex
+var senderLogFile string
 
 var batchMutex sync.RWMutex
 var batchSize uint64
@@ -41,6 +51,17 @@ func init() {
 	}
 	batchSize = uint64(*sizeOfBatch)
 	maxObjectsToPrint = uint64(*sizeOfSequenceToPrint)
+
+	appRoot, _ := os.Getwd()
+	logFile := filepath.Join(appRoot, "receiver_log")
+	receiverLogFile = logFile
+
+	logFile = filepath.Join(appRoot, "sender_log")
+	senderLogFile = logFile
+
+	dataFile := filepath.Join(appRoot, "receiver_output")
+	outputFile = dataFile
+
 }
 
 func GetMaxPrintSize() uint64 {
@@ -53,4 +74,22 @@ func GetBatchSize() uint64 {
 	batchMutex.Lock()
 	defer batchMutex.Unlock()
 	return batchSize
+}
+
+func GetReceiverLogFileName() string {
+	receiverFileMutex.Lock()
+	defer receiverFileMutex.Unlock()
+	return receiverLogFile
+}
+
+func GetSenderLogFileName() string {
+	senderFileMutex.Lock()
+	defer senderFileMutex.Unlock()
+	return senderLogFile
+}
+
+func GetOutputFileName() string {
+	outputFileMutex.Lock()
+	defer outputFileMutex.Unlock()
+	return outputFile
 }
