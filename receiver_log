@@ -222,3 +222,35 @@ receiver: 2020/07/04 12:46:58 Received object: &{whatever 27 [119 104 97 116 101
 receiver: 2020/07/04 12:46:58 Received object: &{whatever 28 [119 104 97 116 101 118 101 114]}
 receiver: 2020/07/04 12:46:58 ****Max objects(25) to print is reached
 receiver: 2020/07/04 12:46:58 ****Received all(30) objects from sender, without loss
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 9 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 5 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 6 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 2 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 4 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 3 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 1 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 0 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 7 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 8 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 19 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 12 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 17 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 13 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 11 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 14 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 18 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 15 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 16 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 10 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 29 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 28 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 26 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 27 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 25 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 21 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 23 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 22 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 24 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 Received object: &{whatever 20 [119 104 97 116 101 118 101 114]}
+receiver: 2020/07/04 12:59:45 ****Max objects(25) to print is reached
+receiver: 2020/07/04 12:59:45 ****Received all(30) objects from sender, without loss

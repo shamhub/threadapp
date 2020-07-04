@@ -61,13 +61,13 @@ func (receiver *Receiver) printBatch(batchSize uint64, outputFile io.Writer) boo
 	sequenceNumber := uint64(0)
 	maxSequencesToPrint := config.GetMaxPrintSize()
 	for sequenceNumber+(batchSize-1) < receiver.nextSeqNumExpected { // received unbroken sequences are [0, receiver.nextSeqNumExpected-1]
-		if receiver.printedSequences >= maxSequencesToPrint {
-			receiver.Log.Printf("****Max objects(%d) to print is reached\n", maxSequencesToPrint)
-			return false
-		}
 		for j := sequenceNumber; j < sequenceNumber+batchSize; j++ {
 			fmt.Fprintf(outputFile, "%d, ", j)
 			receiver.printedSequences++
+			if receiver.printedSequences >= maxSequencesToPrint {
+				receiver.Log.Printf("****Max objects(%d) to print is reached\n", maxSequencesToPrint)
+				return false
+			}
 		}
 		sequenceNumber += batchSize
 	}
