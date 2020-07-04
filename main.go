@@ -72,7 +72,7 @@ func main() {
 		receiver.Log.Printf("Received object: %v", object)
 		nextSequenceIn := object.GetSequenceNumber() // read seq num of an object
 		debugCount++
-		continu := receiver.Print(nextSequenceIn, object, config.GetBatchSize(), outputFile) // print sequence
+		continu := receiver.Print(nextSequenceIn, object, outputFile) // print sequence
 		if continu == false {
 			receiver.WaitForLastObject(objectCh, closeCh, fileErr, debugCount)
 			break

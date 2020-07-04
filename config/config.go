@@ -25,8 +25,8 @@ var printSizeMutex sync.RWMutex
 var maxObjectsToPrint uint64
 
 func init() {
-	sizeOfSequenceToPrint := env.Int("MAX_OBJECTS_TO_PRINT", false, 25, "Outputting the first 50000 objects for any input object")
-	sizeOfBatch := env.Int("BATCH_SIZE", false, 3, "Batch size to print in")
+	sizeOfSequenceToPrint := env.Int("MAX_OBJECTS_TO_PRINT", false, 50000, "Outputting the first 50000 objects for any input object")
+	sizeOfBatch := env.Int("BATCH_SIZE", false, 100, "Batch size to print in")
 
 	err := env.Parse()
 
