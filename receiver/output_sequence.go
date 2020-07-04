@@ -33,14 +33,11 @@ func NewReceiver() (*Receiver, error) {
 	}, nil
 }
 
-func (receiver *Receiver) insertObject(seqNumber uint64, object *data.Object) {
-	receiver.receivedObjects[seqNumber] = object
-}
-
 func (receiver *Receiver) Print(nextSequenceIn uint64, object *data.Object, batchSize uint64, outputFile io.Writer) bool {
-	receiver.insertObject(nextSequenceIn, object)
+	receiver.receivedObjects[nextSequenceIn] = object
 	if receiver.nextSeqNumExpected == nextSequenceIn { // set the next sequence expected
 		key := nextSequenceIn + 1
+		delete(receiver.receivedObjects, nextSequenceIn)
 		for {
 			if _, ok := receiver.receivedObjects[key]; !ok {
 				receiver.nextSeqNumExpected = key
@@ -51,7 +48,7 @@ func (receiver *Receiver) Print(nextSequenceIn uint64, object *data.Object, batc
 	}
 	fmt.Fprintf(outputFile, "[ ")
 	continu := receiver.printBatch(batchSize, outputFile)
-	fmt.Fprintf(outputFile, " ]")
+	fmt.Fprintf(outputFile, "]")
 	receiver.printedSequences = 0
 	fmt.Fprintf(outputFile, "   ----------for input value %d\n", nextSequenceIn)
 	return continu
@@ -61,13 +58,14 @@ func (receiver *Receiver) printBatch(batchSize uint64, outputFile io.Writer) boo
 	sequenceNumber := uint64(0)
 	maxSequencesToPrint := config.GetMaxPrintSize()
 	for sequenceNumber+(batchSize-1) < receiver.nextSeqNumExpected { // received unbroken sequences are [0, receiver.nextSeqNumExpected-1]
+		if receiver.printedSequences+batchSize > maxSequencesToPrint {
+			receiver.Log.Printf("****Max objects(%d) to print is reached\n", maxSequencesToPrint)
+			return false
+		}
 		for j := sequenceNumber; j < sequenceNumber+batchSize; j++ {
 			fmt.Fprintf(outputFile, "%d, ", j)
 			receiver.printedSequences++
-			if receiver.printedSequences >= maxSequencesToPrint {
-				receiver.Log.Printf("****Max objects(%d) to print is reached\n", maxSequencesToPrint)
-				return false
-			}
+
 		}
 		sequenceNumber += batchSize
 	}
